@@ -1,3 +1,12 @@
+import Header from "./componenets/Header";
+import Footer from "./componenets/Footer";
+import InputSection from "./componenets/InputSection";
 export default function Home() {
-  return <h1 className="text-3xl font-bold underline">Hello world!</h1>;
+  return (
+    <div className="flex flex-col h-screen overflow-hidden">
+      <Header />
+      <InputSection />
+      <Footer />
+    </div>
+  );
 }
