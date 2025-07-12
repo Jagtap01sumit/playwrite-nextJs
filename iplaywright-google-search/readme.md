@@ -44,7 +44,7 @@ Using a virtual environment:
 Install all required packages listed in `requirements.txt`:
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirement.txt
 ```
 
 > 🔍 `playwright` is included in this file, so the Python Playwright bindings are installed with the command above.
