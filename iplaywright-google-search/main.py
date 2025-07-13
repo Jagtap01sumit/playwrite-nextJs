@@ -1,4 +1,3 @@
-# main.py
 
 from pages.google_page import search_duckduckgo
 from pages.results_page import extract_result_links, save_links_to_file

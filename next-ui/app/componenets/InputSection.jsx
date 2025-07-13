@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
-
+import img from "@/app/images/image.png";
+import Image from "next/image";
 export default function InputSection() {
+  const [useKeyword, setUseKeyword] = useState(true); // true = keyword, false = URL
   const [keyword, setKeyword] = useState("");
   const [url, setUrl] = useState("");
   const [response, setResponse] = useState(null);
@@ -9,10 +11,11 @@ export default function InputSection() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = keyword ? { keyword } : url ? { url } : null;
+    const payload =
+      useKeyword && keyword ? { keyword } : !useKeyword && url ? { url } : null;
 
     if (!payload) {
-      alert("Please enter either a keyword or a URL.");
+      alert("Please enter the selected input.");
       return;
     }
 
@@ -28,11 +31,11 @@ export default function InputSection() {
 
   return (
     <main className="flex flex-col md:flex-row flex-1 overflow-hidden">
-      <div className="md:w-1/2 w-full h-1/2 md:h-full">
-        <img
-          src="https://w0.peakpx.com/wallpaper/14/258/HD-wallpaper-trees-sunset-sky-silhouette-clouds.jpg"
+      <div className="md:w-1/2 w-full h-screen md:h-auto ">
+        <Image
+          src={img}
           alt="Placeholder"
-          className="w-full h-full object-cover p-10 rounded-[20vw] sm:rounded[15vw] md:rounded-[4vw]"
+          className=" object-contain p-10 pb-400"
         />
       </div>
 
@@ -40,33 +43,59 @@ export default function InputSection() {
         onSubmit={handleSubmit}
         className="md:w-1/2 w-full p-6 flex flex-col justify-center gap-4 overflow-hidden"
       >
+        {/* Toggle Switch */}
+        <div className="flex items-center gap-4">
+          <span className="text-sm">Keyword</span>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              className="sr-only peer"
+              checked={!useKeyword}
+              onChange={() => setUseKeyword((prev) => !prev)}
+            />
+            <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
+            <div className="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full shadow-md transform peer-checked:translate-x-full transition-transform duration-300"></div>
+          </label>
+          <span className="text-sm">URL</span>
+        </div>
+
+        {/* Keyword Input */}
         <label className="flex flex-col gap-1">
           <span className="text-sm font-medium">Enter a Word:</span>
           <input
             type="text"
             placeholder="e.g., automation"
-            className="border border-gray-300 p-2 rounded"
+            className={`border p-2 rounded ${
+              !useKeyword
+                ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                : "border-gray-300"
+            }`}
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
+            disabled={!useKeyword}
           />
         </label>
 
-        <p className="text-center">OR</p>
-
+        {/* URL Input */}
         <label className="flex flex-col gap-1">
           <span className="text-sm font-medium">Enter a URL:</span>
           <input
             type="url"
             placeholder="https://example.com"
-            className="border border-gray-300 p-2 rounded"
+            className={`border p-2 rounded ${
+              useKeyword
+                ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                : "border-gray-300"
+            }`}
             value={url}
             onChange={(e) => setUrl(e.target.value)}
+            disabled={useKeyword}
           />
         </label>
 
         <button
           type="submit"
-          className="mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+          className="mt-4 bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-600"
         >
           Submit
         </button>
