@@ -2,48 +2,66 @@
 import { useState } from "react";
 import img from "@/app/images/image.png";
 import Image from "next/image";
+import LoadingButton from "./LoadingButton";
 export default function InputSection() {
-  const [useKeyword, setUseKeyword] = useState(true); // true = keyword, false = URL
+  const [useKeyword, setUseKeyword] = useState(true);
   const [keyword, setKeyword] = useState("");
   const [url, setUrl] = useState("");
   const [response, setResponse] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [clearing, setClearing] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const payload =
       useKeyword && keyword ? { keyword } : !useKeyword && url ? { url } : null;
 
     if (!payload) {
       alert("Please enter the selected input.");
+      setLoading(false);
       return;
     }
 
-    const res = await fetch("/api/send-keys", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const res = await fetch("/api/send-keys", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    const data = await res.json();
-    setResponse(data);
+      const data = await res.json();
+      setResponse(data);
+    } catch (error) {
+      console.error("Error submitting:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleClear = () => {
+    setClearing(true);
+    setTimeout(() => {
+      setResponse(null);
+      setClearing(false);
+      setUrl("");
+      setKeyword("");
+    }, 300);
   };
 
   return (
-    <main className="flex flex-col md:flex-row flex-1 overflow-hidden">
-      <div className="md:w-1/2 w-full h-screen md:h-auto ">
-        <Image
-          src={img}
-          alt="Placeholder"
-          className=" object-contain p-10 pb-400"
-        />
+    <main className="flex flex-col md:flex-row flex-1">
+      <div className="md:w-1/2 w-full h-4/9 flex items-center justify-center p-6">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all hover:scale-105 hover:shadow-2xl duration-300 w-full h-[70%]">
+          <Image src={img} alt="Placeholder" className="h-8/9 w-full" />
+        </div>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="md:w-1/2 w-full p-6 flex flex-col justify-center gap-4 overflow-hidden"
+        className="md:w-1/2 w-full p-6 justify-center gap-4 flex flex-col"
       >
-        {/* Toggle Switch */}
         <div className="flex items-center gap-4">
           <span className="text-sm">Keyword</span>
           <label className="relative inline-flex items-center cursor-pointer">
@@ -59,7 +77,6 @@ export default function InputSection() {
           <span className="text-sm">URL</span>
         </div>
 
-        {/* Keyword Input */}
         <label className="flex flex-col gap-1">
           <span className="text-sm font-medium">Enter a Word:</span>
           <input
@@ -76,7 +93,6 @@ export default function InputSection() {
           />
         </label>
 
-        {/* URL Input */}
         <label className="flex flex-col gap-1">
           <span className="text-sm font-medium">Enter a URL:</span>
           <input
@@ -93,16 +109,20 @@ export default function InputSection() {
           />
         </label>
 
-        <button
-          type="submit"
-          className="mt-4 bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-600"
-        >
+        <LoadingButton type="submit" loading={loading}>
           Submit
-        </button>
+        </LoadingButton>
 
         {response && (
-          <div className="mt-4 bg-gray-100 p-4 rounded">
-            <pre className="text-sm">{JSON.stringify(response, null, 2)}</pre>
+          <div>
+            <div
+              className={`mt-4 bg-gray-100 p-4 rounded transition-opacity duration-300 ${
+                clearing ? "opacity-0" : "opacity-100"
+              }`}
+            >
+              <pre className="text-sm">{JSON.stringify(response, null, 2)}</pre>
+            </div>
+            <LoadingButton onClick={handleClear}>Clear</LoadingButton>
           </div>
         )}
       </form>

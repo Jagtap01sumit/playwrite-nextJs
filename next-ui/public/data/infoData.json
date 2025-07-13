@@ -1,0 +1,37 @@
+{
+    "title": "Website Health Check Features",
+    "features": [
+        {
+            "label": "Status Check",
+            "value": "Verifies if the website is online and reachable without any errors."
+        },
+        {
+            "label": "Responsive Design",
+            "value": "Ensures your site looks and works great on all devices (mobile, tablet, desktop)."
+        },
+        {
+            "label": "SSL Certificate Validation",
+            "value": "Checks if your SSL certificate is valid, trusted, and not expired."
+        },
+        {
+            "label": "Page Load Speed",
+            "value": "Measures how fast your website loads and flags slow pages."
+        },
+        {
+            "label": "Broken Link Detection",
+            "value": "Scans for non-working links that can hurt user experience and SEO."
+        },
+        {
+            "label": "Security Headers",
+            "value": "Verifies presence of headers like CSP, HSTS, X-Frame-Options, etc."
+        },
+        {
+            "label": "SEO Tags",
+            "value": "Extracts and validates title, meta description, canonical URL, and robots tag."
+        },
+        {
+            "label": "Accessibility",
+            "value": "Checks for basic accessibility best practices for inclusive experience."
+        }
+    ]
+}
