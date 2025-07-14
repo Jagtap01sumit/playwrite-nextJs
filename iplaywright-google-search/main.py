@@ -18,6 +18,9 @@ def handle_url_health_check(url):
     with sync_playwright() as playwright:
         result = test_url_playwright(playwright, url)
         print("this is url now creating report...")
-        save_html_report(url, result)
+        filename= save_html_report(url, result)
+        print("filename:",filename)
         playwright.stop()
-        return {"message": "Health check completed", "report": result}
+        print("report is creted successfully!!")
+        return {"message": "Health check completed", "report": result, "fileName": filename["report_name"]}
+

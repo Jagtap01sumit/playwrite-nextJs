@@ -46,7 +46,7 @@ def test_url_playwright(playwright, url: str):
     result.update(ssl_result)
 
     try:
-        # Prepare to capture security headers BEFORE navigation
+       
         security_headers = {}
 
         def handle_response(resp):
@@ -60,9 +60,8 @@ def test_url_playwright(playwright, url: str):
                     "Referrer-Policy": h.get("referrer-policy"),
                 })
 
-        page.on("response", handle_response)  # Register BEFORE navigation
-
-        # Navigate
+        page.on("response", handle_response)
+     
         start = time.time()
         response = page.goto(url, timeout=15000)
         load_time = time.time() - start
@@ -83,16 +82,16 @@ def test_url_playwright(playwright, url: str):
                 page.screenshot(path=path)
                 result["screenshots"]["responsive"] = path
 
-            # SEO Check
+            
             result["seo"]["title"] = page.title()
             result["seo"]["meta_description"] = page.locator("meta[name='description']").get_attribute("content")
             result["seo"]["canonical"] = page.locator("link[rel='canonical']").get_attribute("href")
             result["seo"]["robots"] = page.locator("meta[name='robots']").get_attribute("content")
 
-            # Save security headers
+        
             result["security_headers"] = security_headers
 
-            # Broken Links
+            
             anchors = page.query_selector_all("a")
             for anchor in anchors:
                 href = anchor.get_attribute("href")

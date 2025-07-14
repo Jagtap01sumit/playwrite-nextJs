@@ -25,14 +25,27 @@ export default function InputSection() {
     }
 
     try {
+      console.log("this is before url111111");
       const res = await fetch("/api/send-keys", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
+      console.log("this is before url");
       const data = await res.json();
       setResponse(data);
+      console.log(data.downloadUrl, "this is url");
+      if (data.downloadUrl) {
+        console.log(data.downloadUrl, "url");
+        const link = document.createElement("a");
+        link.href = data.downloadUrl;
+        link.download = data.fileUrl || "report.html";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        console.log("something went wrong");
+      }
     } catch (error) {
       console.error("Error submitting:", error);
     } finally {
